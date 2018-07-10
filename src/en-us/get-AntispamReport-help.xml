@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<helpItems schema="maml">
+  <_locDefinition>
+    <_locDefault _loc="locNone" />
+    <_locTag _loc="locData">maml:para</_locTag>
+    <_locTag _loc="locData">maml:title</_locTag>
+  </_locDefinition>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>get-AntispamFilteringReport.ps1</command:name>
+      <maml:description>
+        <maml:para _locID="CommandShortDescription">Gets the top 10 (by default unless top parameter is specified) sources (i.e. agents) which are responsible for either rejecting connections, commands or for rejecting/deleting/quarantining a message.</maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para _locID="Copyright">Copyright (c) Microsoft.  All rights reserved.</maml:para>
+      </maml:copyright>
+      <command:verb>get</command:verb>
+      <command:noun>AntispamFilteringReport.ps1</command:noun>
+      <dev:version />
+    </command:details>
+    <maml:description>
+      <maml:para _locID="CommandLongDescription"></maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <command:name>get-AntispamFilteringReport.ps1</command:name>
+        <command:parameter required="false" position="1">
+          <maml:name>report</maml:name>
+          <command:parameterValue>String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" position="2">
+          <maml:name>location</maml:name>
+          <command:parameterValue>Object</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" position="3">
+          <maml:name>startDate</maml:name>
+          <command:parameterValue>DateTime</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" position="4">
+          <maml:name>endDate</maml:name>
+          <command:parameterValue>DateTime</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" position="5">
+          <maml:name>top</maml:name>
+          <command:parameterValue>Int32</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="" globbing="" pipelineInput="false" position="1">
+        <maml:name>report</maml:name>
+        <maml:description>
+          <maml:para _locID="Param_Description_report">Mandatory parameter. This can be one of the following:
+connections - to identify the source of reject connections.
+commands - to identify the source of reject commands.
+messagesrejected - to identify the source of rejected messages/rejected recipients.
+messagesdeleted - to identify the source of deleted messages.
+messagesquarantined - to identify the source of quarantined messages.</maml:para>
+        </maml:description>
+        <command:parameterValue>String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="" globbing="" pipelineInput="false" position="2">
+        <maml:name>location</maml:name>
+        <maml:description>
+          <maml:para _locID="Param_Description_location">Directory location for the agent log files. If not specified, use the default log file location under %INSTALL_DIR%\TransportRoles\Logs\%TRANSPORT_ROLE%\AgentLog (where %INSTALL_DIR% is the installation root for the Exchange server and %TRANSPORT_ROLE% is one of Edge,Hub,FrontEnd,Mailbox).</maml:para>
+        </maml:description>
+        <command:parameterValue>Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="" globbing="" pipelineInput="false" position="3">
+        <maml:name>startDate</maml:name>
+        <maml:description>
+          <maml:para _locID="Param_Description_startDate">Beginning time period to look for in the agent log files. If not specified, look at all the logs till the endDate.</maml:para>
+        </maml:description>
+        <command:parameterValue>DateTime</command:parameterValue>
+        <dev:type>
+          <maml:name>DateTime</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="" globbing="" pipelineInput="false" position="4">
+        <maml:name>endDate</maml:name>
+        <maml:description>
+          <maml:para _locID="Param_Description_endDate">End time period to look for in the agent log files. If not specified, look at all the logs beginning from startDate. If neither of the dates is specified, look at all the log files.</maml:para>
+        </maml:description>
+        <command:parameterValue>DateTime</command:parameterValue>
+        <dev:type>
+          <maml:name>DateTime</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="" globbing="" pipelineInput="false" position="5">
+        <maml:name>top</maml:name>
+        <maml:description>
+          <maml:para _locID="Param_Description_top">Find the top N source for this command. By default (i.e. if not specified), N = 10.</maml:para>
+        </maml:description>
+        <command:parameterValue>Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+    </command:parameters>
+    <command:examples>
+      <command:example>
+        <maml:title _locID="Example_Title_1">-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt;</maml:para>
+        </maml:introduction>
+        <dev:code>get-AntispamFilteringReport [command] -location c:\Logs</dev:code>
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title _locID="Example_Title_2">-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt;</maml:para>
+        </maml:introduction>
+        <dev:code>get-AntispamFilteringReport rejectedmessages -location c:\Logs</dev:code>
+        <dev:remarks>
+          <maml:para _locID="Example_2_Remarks_1">Find the top 10 sources for rejectedmessages</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+  </command:command>
+</helpItems>
