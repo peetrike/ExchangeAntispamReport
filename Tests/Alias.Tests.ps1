@@ -1,8 +1,14 @@
 $ModuleName = 'ExchangeAntispamReport'
+$manifestPath = "$PSScriptRoot/../Release/$moduleName/$moduleName.psd1"
+# Remove all versions of the module from the session. Pester can't handle multiple versions.
+Get-Module $moduleName | Remove-Module -Force
+
+Import-Module -Name $manifestPath -Force -Verbose:$false -ErrorAction Stop
+
 
 # Requires -Module @{ModuleName = 'Pester'; ModuleVersion = '3.4.0'}
 
-$RequiredVersion = (Get-Module $ModuleName -ListAvailable | Sort-Object -Property Version -Descending | Select-Object -First 1).Version
+$RequiredVersion = (Get-Module $ModuleName).Version
 
 if ($ExportedAliases = (Get-Module -ListAvailable -FullyQualifiedName @{ ModuleName = $ModuleName; RequiredVersion = $RequiredVersion }).ExportedAliases.Values.Name)
 {
