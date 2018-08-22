@@ -2,21 +2,8 @@
 // current workspace folder.
 // NOTE: This Test task runner requires an updated version of Pester (>=4.0.3)
 // in order for the problemMatcher to find failed test information (message, line, file).
-// If you don't have that version, you can update Pester from the PowerShell Gallery
-// with this command:
 //
-// PS C:\> Update-Module Pester
-//
-// If that gives an error like:
-// "Module 'Pester' was not installed by using Install-Module, so it cannot be updated."
-// then execute:
-//
-// PS C:\> Install-Module Pester -Scope CurrentUser -Force
-//
-// NOTE: The Clean, Build and Publish tasks require PSake. PSake can be installed
-// from the PowerShell Gallery with this command:
-//
-// PS C:\> Install-Module PSake -Scope CurrentUser -Force
+// NOTE: The Clean, Build and Publish tasks require PSake.
 //
 // Available variables which can be used inside of strings:
 // ${workspaceFolder} the path of the workspace folder that contains the tasks.json file
@@ -70,7 +57,26 @@
         {
             "label": "Clean",
             "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Clean"
+            "command": "Invoke-PSake build.psake.ps1 -taskList Clean",
+            "problemMatcher": [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
         },
         {
             "label": "Build",
@@ -79,7 +85,76 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "problemMatcher": [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "BuildHelp",
+            "type": "shell",
+            "command": "Invoke-PSake build.psake.ps1 -taskList BuildHelp",
+            "group": "build",
+            "problemMatcher": [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Analyze",
+            "type": "shell",
+            "command": "Invoke-PSake build.psake.ps1 -taskList Analyze",
+            "group": "test",
+            "problemMatcher":  [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
         },
         {
             "label": "Test",
@@ -96,7 +171,50 @@
         {
             "label": "Publish",
             "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Publish"
+            "command": "Invoke-PSake build.psake.ps1 -taskList Publish",
+            "problemMatcher": [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "label": "Install",
+            "type": "shell",
+            "command": "Invoke-PSake build.psake.ps1 -taskList Install",
+            "problemMatcher": [
+                {
+                    "owner": "powershell",
+                    "fileLocation": ["absolute"],
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "(.+)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
