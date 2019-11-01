@@ -42,9 +42,17 @@
             Whitelist = @("cd")
         } #>
 
+        # https://github.com/PowerShell/PSScriptAnalyzer/blob/master/RuleDocumentation/AlignAssignmentStatement.md
+        PSAlignAssignmentStatement = @{
+            Enable = $true
+            CheckHashtable = $true
+        }
+
         # https://github.com/PowerShell/PSScriptAnalyzer/blob/master/RuleDocumentation/PlaceCloseBrace.md
         PSPlaceCloseBrace = @{
             Enable = $true
+            NoEmptyLineBefore = $true
+            NewLineAfter = $false
         }
         # https://github.com/PowerShell/PSScriptAnalyzer/blob/master/RuleDocumentation/PlaceOpenBrace.md
         PSPlaceOpenBrace = @{
@@ -69,13 +77,14 @@
         }
 
         # https://github.com/PowerShell/PSScriptAnalyzer/blob/master/RuleDocumentation/UseConsistentIndentation.md
-        PSUseConsistentIndentation = @{
+        <# PSUseConsistentIndentation = @{
             Enable = $true
-        }
+        } #>
 
         # https://github.com/PowerShell/PSScriptAnalyzer/blob/master/RuleDocumentation/UseConsistentWhitespace.md
-        PSUseConsistentWhitespace  = @{
-            Enable          = $true
+        PSUseConsistentWhitespace = @{
+            Enable = $true
+            CheckOperator = $false
         }
 
         UseCompatibleCommmands = @{

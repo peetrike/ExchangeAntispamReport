@@ -17,204 +17,276 @@
 // ${cwd} the task runner's current working directory on startup
 // ${lineNumber} the current selected line number in the active file
 {
-    "version": "2.0.0",
-    "windows": {
-        "options": {
-            "shell": {
-                "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-                "args": [
-                    "-NoProfile",
-                    "-ExecutionPolicy",
-                    "Bypass",
-                    "-Command"
-                ]
-            }
-        }
-    },
-    "linux": {
-        "options": {
-            "shell": {
-                "executable": "/usr/bin/pwsh",
-                "args": [
-                    "-NoProfile",
-                    "-Command"
-                ]
-            }
-        }
-    },
-    "osx": {
-        "options": {
-            "shell": {
-                "executable": "/usr/local/bin/pwsh",
-                "args": [
-                    "-NoProfile",
-                    "-Command"
-                ]
-            }
-        }
-    },
-    "tasks": [
+  "version": "2.0.0",
+  "windows": {
+    "options": {
+      "shell": {
+        "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "linux": {
+    "options": {
+      "shell": {
+        "executable": "/usr/bin/pwsh",
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "osx": {
+    "options": {
+      "shell": {
+        "executable": "/usr/local/bin/pwsh",
+        "args": [
+          "-NoProfile",
+          "-Command"
+        ]
+      }
+    }
+  },
+  "tasks": [
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "Invoke-PSake build.psake.ps1 -taskList Clean",
+      "problemMatcher": [
         {
-            "label": "Clean",
-            "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Clean",
-            "problemMatcher": [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "Build",
-            "type": "shell",
-            "command": "./build.ps1",
-            "group": {
-                "kind": "build",
-                "isDefault": true
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
             },
-            "problemMatcher": [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "BuildHelp",
-            "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList BuildHelp",
-            "group": "build",
-            "problemMatcher": [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "Analyze",
-            "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Analyze",
-            "group": "test",
-            "problemMatcher":  [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "Test",
-            "type": "shell",
-            "command": "Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "problemMatcher": [
-                "$pester"
-            ]
-        },
-        {
-            "label": "Publish",
-            "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Publish",
-            "problemMatcher": [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "label": "Install",
-            "type": "shell",
-            "command": "Invoke-PSake build.psake.ps1 -taskList Install",
-            "problemMatcher": [
-                {
-                    "owner": "powershell",
-                    "fileLocation": ["absolute"],
-                    "severity": "error",
-                    "pattern": [
-                        {
-                            "regexp": "(.+)",
-                            "message": 1
-                        },
-                        {
-                            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
-                            "file": 1,
-                            "line": 2,
-                            "column": 3
-                        }
-                    ]
-                }
-            ]
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "./build.ps1",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        {
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
+            },
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "BuildHelp",
+      "type": "shell",
+      "command": "Invoke-PSake build.psake.ps1 -taskList BuildHelp",
+      "group": "build",
+      "problemMatcher": [
+        {
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
+            },
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Analyze",
+      "type": "shell",
+      "command": "Invoke-PSake build.psake.ps1 -taskList Analyze",
+      "group": "test",
+      "problemMatcher": [
+        {
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
+            },
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Test",
+      "type": "shell",
+      "command": "Invoke-Pester -PesterOption @{IncludeVSCodeMarker=$true}",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$pester"
+      ]
+    },
+    {
+      "label": "Publish",
+      "type": "shell",
+      "command": "Invoke-PSake build.psake.ps1 -taskList Publish",
+      "problemMatcher": [
+        {
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
+            },
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Install",
+      "type": "shell",
+      "command": "Invoke-PSake build.psake.ps1 -taskList Install",
+      "problemMatcher": [
+        {
+          "owner": "powershell",
+          "fileLocation": [
+            "absolute"
+          ],
+          "severity": "error",
+          "pattern": [
+            {
+              "regexp": "(.+)",
+              "message": 1
+            },
+            {
+              "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Add script",
+      "type": "shell",
+      "command": "Invoke-Plaster -TemplatePath ${workspaceFolder}\\..\\plaster.template.pw\\AddPWScript -DestinationPath ${input:Folder}",
+      "problemMatcher": [
+      {
+        "owner": "powershell",
+        "fileLocation": [
+          "absolute"
+        ],
+        "severity": "error",
+        "pattern": [
+          {
+            "regexp": "(.+)",
+            "message": 1
+          },
+          {
+            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+      ]
+    },
+    {
+      "label": "Add function",
+      "type": "shell",
+      "command": "Invoke-Plaster -TemplatePath ${workspaceFolder}\\..\\plaster.template.pw\\AddPWFunction -DestinationPath ${input:Folder}",
+      "problemMatcher": [
+      {
+        "owner": "powershell",
+        "fileLocation": [
+          "absolute"
+        ],
+        "severity": "error",
+        "pattern": [
+          {
+            "regexp": "(.+)",
+            "message": 1
+          },
+          {
+            "regexp": "At (.*\\.ps1):(\\d*) char:(\\d*)(.*)",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "Folder",
+      "type": "promptString",
+      "description": "Folder where to create new file.",
+      "default": "${workspaceFolder}\\src"
+    }
+  ]
 }
