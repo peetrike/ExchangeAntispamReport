@@ -19,7 +19,7 @@ Properties {
     $DocsRootDir = Join-Path -Path $PSScriptRoot -ChildPath "docs"
     $SrcRootDir  = Join-Path -Path $PSScriptRoot -ChildPath "src"
         [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
-    $TestRootDir = Join-Path -Path $PSScriptRoot -ChildPath "test"
+    $TestRootDir = Join-Path -Path $PSScriptRoot -ChildPath "tests"
 
     # The name of your module should match the basename of the PSD1 file.
         [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '')]
