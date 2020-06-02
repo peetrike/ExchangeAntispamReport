@@ -1,4 +1,5 @@
 function Get-SenderAddress {
+    # .EXTERNALHELP get-AntispamReport-help.xml
     param(
             [parameter(
                 ValueFromPipeLine=$true

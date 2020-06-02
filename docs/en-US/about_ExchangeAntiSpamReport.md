@@ -1,0 +1,41 @@
+# ExchangeAntiSpamReport
+## about_ExchangeAntiSpamReport
+
+# SHORT DESCRIPTION
+
+Describes module that helps to create reports from Exchange Server antispam
+agent logs.
+
+# LONG DESCRIPTION
+
+ExchangeAntiSpamReport is a module that takes log entries from Exchange Server
+antispam agent logs and creates reports based on them.  Most of the reports
+count specific senders, Sender IP-s, recipients or agents that are part of
+rejecting messages.
+
+Before generating report, a connection to Exchange Server should be established.
+When module is used from Exchange Management Shell, the connection is already
+present.  When generic Powershell console is used, then before using other
+commands, the Connect-ExchangeServer cmdlet will make PowerShell remoting
+session to specified Exchange Server and import Exchange management cmdlets from
+that session.
+
+Possible reporting cmdlets are:
+
+- Get-AntispamReport                 - reports top agents that performed specific action
+- Get-AntispamTopBlockedSender       - reports top blocked sender e-mail addressess
+- Get-AntispamTopBlockedSenderDomain - reports top blocked sender e-mail address domains
+- Get-AntispamTopBlockedSenderIP     - reports top blocked senders by IP address
+- Get-AntispamTopRBLProvider         - reports top RBL providers
+- Get-AntispamTopRecipient           - reports top blocked e-mail recipient addresses
+
+# SEE ALSO
+
+- [Get-AgentLog](http://technet.microsoft.com/en-us/library/aa996044)
+- [Connect to Exchange servers using remote PowerShell](http://technet.microsoft.com/en-us/library/dd335083)
+
+# KEYWORDS
+
+- exchange
+- anti-spam
+- report
