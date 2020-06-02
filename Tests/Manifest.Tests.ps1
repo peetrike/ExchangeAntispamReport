@@ -1,11 +1,16 @@
-$projectRoot = "$PSScriptRoot/.."
-$moduleName = 'ExchangeAntispamReport'
-$manifestPath = "$projectRoot/src/$moduleName.psd1"
-$manifest = Import-PowerShellDataFile -Path $manifestPath
+﻿#Requires -Modules BuildHelpers, Pester
 
-$changelogPath = Join-Path -Path $projectRoot -Child 'CHANGELOG.md'
+BeforeAll {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage('PSUseDeclaredVarsMoreThanAssigments', '', Scope='*', Target='SuppressImportModule')]
+    $SuppressImportModule = $true
+    . $PSScriptRoot\Shared.ps1
 
-Describe 'Module manifest' {
+    $manifest = Import-PowerShellDataFile -Path $manifestPath
+
+    $changelogPath = Join-Path -Path $projectRoot -Child 'CHANGELOG.md'
+}
+
+Describe 'Module manifest' -Tags @('MetaTest') {
     Context 'Validation' {
 
         $script:manifest = $null
@@ -13,37 +18,37 @@ Describe 'Module manifest' {
         It 'has a valid manifest' {
             {
                 $script:manifest = Test-ModuleManifest -Path $manifestPath -Verbose:$false -ErrorAction Stop -WarningAction SilentlyContinue
-            } | Should Not Throw
+            } | Should -Not -Throw
         }
 
         It 'has a valid name in the manifest' {
-            $script:manifest.Name | Should Be $moduleName
+            $script:manifest.Name | Should -Be $moduleName
         }
 
         It 'has a valid root module' {
-            $script:manifest.RootModule | Should Be "$($moduleName).psm1"
+            $script:manifest.RootModule | Should -Be "$($moduleName).psm1"
         }
 
         It 'has a valid version in the manifest' {
-            $script:manifest.Version -as [Version] | Should Not BeNullOrEmpty
+            $script:manifest.Version -as [Version] | Should -Not -BeNullOrEmpty
         }
 
         It 'has a valid description' {
-            $script:manifest.Description | Should Not BeNullOrEmpty
+            $script:manifest.Description | Should -Not -BeNullOrEmpty
         }
 
         It 'has a valid author' {
-            $script:manifest.Author | Should Not BeNullOrEmpty
+            $script:manifest.Author | Should -Not -BeNullOrEmpty
         }
 
         It 'has a valid guid' {
             {
                 [guid]::Parse($script:manifest.Guid)
-            } | Should Not throw
+            } | Should -Not -Throw
         }
 
         It 'has a valid copyright' {
-            $script:manifest.CopyRight | Should Not BeNullOrEmpty
+            $script:manifest.CopyRight | Should -Not -BeNullOrEmpty
         }
 
         # Only for DSC modules
@@ -51,6 +56,12 @@ Describe 'Module manifest' {
         #     $dscResources = ($Manifest.psobject.Properties | Where Name -eq 'ExportedDscResources').Value
         #     @($dscResources).Count | Should Not Be 0
         # }
+
+        foreach ($tag in $manifest.PrivateData.PSData.Tags) {
+            It "manifest tag '$tag' should have no spaces in name" {
+                $tag -match ' ' | Should -Be $false
+            }
+        }
 
         $script:changelogVersion = $null
         It 'has a valid version in the changelog' {
@@ -60,12 +71,12 @@ Describe 'Module manifest' {
                     break
                 }
             }
-            $script:changelogVersion               | Should Not BeNullOrEmpty
-            $script:changelogVersion -as [Version] | Should Not BeNullOrEmpty
+            $script:changelogVersion               | Should -Not -BeNullOrEmpty
+            $script:changelogVersion -as [Version] | Should -Not -BeNullOrEmpty
         }
 
         It 'changelog and manifest versions are the same' {
-            $script:changelogVersion -as [Version] | Should be ( $script:manifest.Version -as [Version] )
+            $script:changelogVersion -as [Version] | Should -Be ( $script:manifest.Version -as [Version] )
         }
 
         if (Get-Command git.exe -ErrorAction SilentlyContinue) {
@@ -77,12 +88,47 @@ Describe 'Module manifest' {
                     $script:tagVersion = $matches[1]
                 }
 
-                $script:tagVersion               | Should Not BeNullOrEmpty
-                $script:tagVersion -as [Version] | Should Not BeNullOrEmpty
+                $script:tagVersion               | Should -Not -BeNullOrEmpty
+                $script:tagVersion -as [Version] | Should -Not -BeNullOrEmpty
             }
 
             It 'manifest and tagged version are the same' -Skip {
-                $script:manifest.Version -as [Version] | Should be ( $script:tagVersion -as [Version] )
+                $script:manifest.Version -as [Version] | Should -Be ( $script:tagVersion -as [Version] )
+            }
+        }
+    }
+
+    Context "Individual file validation" {
+        BeforeAll {
+            $moduleRoot = Split-Path -Path $manifestPath -Parent
+        }
+
+        It "The root module file exists" {
+            $RootModulePath = Join-Path -Path $moduleRoot -ChildPath $manifest.RootModule
+            Test-Path -Path $RootModulePath | Should -Be $true
+        }
+
+        foreach ($format in $manifest.FormatsToProcess) {
+            It "The file $format should exist" {
+                Test-Path "$moduleRoot\$format" | Should -Be $true
+            }
+        }
+
+        foreach ($type in $manifest.TypesToProcess) {
+            It "The file $type should exist" {
+                Test-Path "$moduleRoot\$type" | Should -Be $true
+            }
+        }
+
+        foreach ($assembly in $manifest.RequiredAssemblies) {
+            if ($assembly -like "*.dll") {
+                It "The file $assembly should exist" {
+                    Test-Path "$moduleRoot\$assembly" | Should -Be $true
+                }
+            } else {
+                It "The file $assembly should load from the GAC" {
+                    { Add-Type -AssemblyName $assembly } | Should -Not -Throw
+                }
             }
         }
     }

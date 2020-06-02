@@ -1,46 +1,40 @@
-$ModuleName = 'ExchangeAntispamReport'
-$manifestPath = "$PSScriptRoot/../Release/$moduleName/$moduleName.psd1"
-# Remove all versions of the module from the session. Pester can't handle multiple versions.
-Get-Module $moduleName | Remove-Module -Force
+#Requires -Modules BuildHelpers, Pester
 
-Import-Module -Name $manifestPath -Force -Verbose:$false -ErrorAction Stop
-
-
-# Requires -Module @{ModuleName = 'Pester'; ModuleVersion = '3.4.0'}
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSUseDeclaredVarsMoreThanAssigments', '', Scope='*', Target='SuppressImportModule'
+)]
+$SuppressImportModule = $false
+. $PSScriptRoot\Shared.ps1
 
 $RequiredVersion = (Get-Module $ModuleName).Version
 
-if ($ExportedAliases = (Get-Module -ListAvailable -FullyQualifiedName @{ ModuleName = $ModuleName; RequiredVersion = $RequiredVersion }).ExportedAliases.Values.Name)
-{
-	# Remove all versions of the module from the session. Pester can't handle multiple versions.
-	Get-Module $ModuleName | Remove-Module
+if ($ExportedAliases = (Get-Module $ModuleName).ExportedAliases.Values.Name) {
+    foreach ($ExportedAlias in $ExportedAliases) {
+        $AliasInSession = Get-Alias $ExportedAlias -ErrorAction SilentlyContinue
 
-	# Import the required version
-	Import-Module $ModuleName -RequiredVersion $RequiredVersion -ErrorAction Stop
+        Describe "Testing exported alias $ExportedAlias" -Tags @('MetaTest') {
+            It "Get-Alias should not error out" -TestCases @{
+                ExportedAlias  = $ExportedAlias
+                AliasinSession = $AliasInSession
+            } {
+                $AliasInSession | Should -Not -BeNullOrEmpty
+            }
 
-	foreach ($ExportedAlias in $ExportedAliases)
-	{
-		Describe "Testing exported aliases" {
+            It "Get-Alias should find alias in session" -TestCases @{
+                ExportedAlias  = $ExportedAlias
+                AliasinSession = $AliasInSession
+            } {
+                $AliasInSession.Name | Should -Be $ExportedAlias
+            }
 
-			$script:AliasInSession = $null
-
-			It "Get-Alias should not error out: $ExportedAlias" {
-				{ $script:AliasInSession = Get-Alias $ExportedAlias -ErrorAction Stop } | Should Not Throw
-			}
-
-			It "Get-Alias should find alias in session: $ExportedAlias" {
-
-				$script:AliasInSession.Name | Should Be $ExportedAlias
-			}
-
-			It "Get-Alias should find value: $ExportedAlias" {
-
-				$script:AliasInSession.ResolvedCommandName -or $script:AliasInSession.Definition | Should Be $True
-			}
-		}
-	}
-}
-else
-{
-	Write-Host "Module.TestAliases.Tests.ps1:  $ModuleName ($RequiredVersion) does not export any aliases."
+            It "Get-Alias should find value" -TestCases @{
+                ExportedAlias  = $ExportedAlias
+                AliasinSession = $AliasInSession
+            } {
+                $AliasInSession.ResolvedCommandName -or $AliasInSession.Definition | Should -Be $True
+            }
+        }
+    }
+} else {
+    Write-Host "Aliases.Tests.ps1:  $ModuleName ($RequiredVersion) does not export any aliases."
 }
